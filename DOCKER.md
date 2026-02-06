@@ -198,3 +198,7 @@ docker-compose exec app npm run build
 Pour plus d'informations, consultez la documentation officielle :
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - [Laravel Docker Guide](https://laravel.com/docs/installation)
+
+---
+
+CI Trigger: petit commit pour relancer GitHub Actions (6 février 2026)
