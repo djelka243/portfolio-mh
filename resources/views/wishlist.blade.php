@@ -1,6 +1,5 @@
 <x-layouts.site :title="__('Achats souhaités')" :breadcrumbs="['accueil' => __('Accueil'), 'wishlist' => __('Achats souhaités')]">
     <div class="min-h-screen ">
-        <!-- En-tête minimaliste -->
         <div class=" border-b border-gray-700">
             <div class="max-w-7xl mx-auto px-6 py-8">
                 <div class="flex items-center justify-between">
@@ -17,23 +16,19 @@
                 </div>
             </div>
         </div>
-
-        <!-- Contenu principal -->
         <div class="max-w-7xl mx-auto px-6 py-12">
             <div id="wishlistContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Liste produits (8 colonnes) -->
+   
                 <div class="lg:col-span-8">
                     <div class="space-y-4" id="wishlistItems">
-                        <!-- Chargé dynamiquement -->
+                   
                     </div>
                 </div>
 
-                <!-- Sidebar résumé (4 colonnes) -->
                 <div class="lg:col-span-4">
                     <div class="bg-gray-50 dark:bg-zinc-900 rounded-lg p-6 sticky top-6">
                         <h2 class="text-lg font-semibold  mb-6">{{ __('jd.order_summary') }}</h2>
                         
-                        <!-- Totaux -->
                         <div class="space-y-3 pb-6 border-b border-gray-200">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-600 dark:text-gray-300">{{ __('jd.subtotal') }}</span>
@@ -53,8 +48,6 @@
                             <span class="text-base font-semibold ">{{ __('jd.total') }}</span>
                             <span class="text-2xl font-bold ">$<span id="total">0.00</span></span>
                         </div>
-
-                        <!-- Bouton commander -->
                         <button onclick="checkout()" class="w-full bg-gray-900 dark:bg-yellow-900 text-white py-3.5 rounded-lg font-medium hover:bg-gray-800 transition-colors mb-3">
                             {{__('jd.checkout')}}
                         </button>
@@ -62,8 +55,6 @@
                         <p class="text-xs text-center text-gray-500">
                             {{ __('jd.or') }} <a href="/" class="underline hover:text-gray-700 dark:hover:text-gray-300">{{ __('jd.continue_shopping') }}</a>
                         </p>
-
-                        <!-- Avantages -->
                         <div class="mt-8 pt-6 border-t border-gray-200 space-y-4">
                             <div class="flex items-start gap-3">
                                 <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +79,6 @@
                 </div>
             </div>
 
-            <!-- Panier vide -->
             <div id="emptyMessage" class="hidden text-center py-24">
                 <div class="max-w-md mx-auto">
                     <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -106,10 +96,9 @@
         </div>
     </div>
 
-    <!-- Modal Vue Rapide -->
     <div id="quickViewModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50 p-4">
         <div class="bg-white  rounded-lg max-w-3xl w-full max-h-[85vh] overflow-y-auto">
-            <!-- Header -->
+
             <div class="flex items-center justify-between p-6 border-b">
                 <h2 class="text-xl font-semibold" id="quickViewTitle"></h2>
                 <button onclick="closeQuickView()" class="text-gray-400 hover:text-gray-600">
@@ -119,7 +108,6 @@
                 </button>
             </div>
 
-            <!-- Content -->
             <div class="p-6">
                 <div class="grid md:grid-cols-2 gap-8">
                     <div>
@@ -145,13 +133,11 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Formulaire de Commande -->
 <div id="checkoutModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <!-- Header -->
-        <div class="flex justify-between items-center p-6 border-b border-gray-200 sticky top-0 bg-white z-10 rounded-t-2xl">
-            <h2 class="text-2xl font-bold text-gray-900">Finaliser ma commande</h2>
+    <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 sticky top-0 bg-white dark:bg-gray-800 z-10 rounded-t-2xl">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Finaliser ma commande</h2>
             <button onclick="closeCheckoutModal()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                 <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -159,54 +145,50 @@
             </button>
         </div>
         
-        <!-- Form -->
         <form id="checkoutForm" class="p-6">
             @csrf
-            <!-- Informations personnelles -->
             <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Informations personnelles</h3>
+                <h3 class="text-lg font-semibold mb-4">Informations personnelles</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">Prénom *</label>
                         <input type="text" name="prenom" required
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">Nom *</label>
                         <input type="text" name="nom" required
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">Email *</label>
                         <input type="email" name="email" required
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone *</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">Téléphone *</label>
                         <input type="tel" name="telephone" required placeholder="+243 123 456 789"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent">
                     </div>
                 </div>
             </div>
-
-            <!-- Adresse de livraison -->
             <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Adresse de livraison</h3>
+                <h3 class="text-lg font-semibold mb-4">Adresse de livraison</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Adresse complète *</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">Adresse complète *</label>
                         <textarea name="adresse" required rows="3"
                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent"
                                   placeholder="Numéro, rue, quartier..."></textarea>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Ville *</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">Ville *</label>
                             <input type="text" name="ville" required
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Code postal</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">Code postal</label>
                             <input type="text" name="code_postal"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent">
                         </div>
@@ -214,21 +196,19 @@
                 </div>
             </div>
 
-            <!-- Commentaire -->
             <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Commentaire (optionnel)</h3>
+                <h3 class="text-lg font-semibold mb-4">Commentaire (optionnel)</h3>
                 <textarea name="commentaire" rows="4"
                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent"
                           placeholder="Instructions de livraison, préférences..."></textarea>
             </div>
 
-            <!-- Résumé -->
-            <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Résumé de la commande</h3>
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Résumé de la commande</h3>
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-600">Sous-total</span>
-                        <span class="font-medium text-gray-900">$<span id="modalSubtotal">0.00</span></span>
+                        <span class="font-medium">$<span id="modalSubtotal">0.00</span></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">Livraison</span>
@@ -236,17 +216,16 @@
                     </div>
                     <div class="border-t border-gray-200 pt-2 mt-2">
                         <div class="flex justify-between">
-                            <span class="font-semibold text-gray-900">Total</span>
-                            <span class="text-xl font-bold text-gray-900">$<span id="modalTotal">0.00</span></span>
+                            <span class="font-semibold">Total</span>
+                            <span class="text-xl font-bold">$<span id="modalTotal">0.00</span></span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Boutons -->
             <div class="flex gap-3">
                 <button type="button" onclick="closeCheckoutModal()"
-                        class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                        class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 dark:text-gray-400 font-medium rounded-lg hover:bg-gray-50 transition-colors">
                     Annuler
                 </button>
                 <button type="submit" id="submitOrderBtn"
@@ -258,7 +237,6 @@
     </div>
 </div>
 
-<!-- Toast notification (déjà existant, ajustez si nécessaire) -->
 <div id="toast" class="fixed top-24 -right-full bg-gray-900 text-white px-6 py-4 rounded-lg shadow-2xl transition-all duration-300 items-center gap-3 z-50 hidden">
     <svg class="w-6 h-6 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -450,15 +428,11 @@
             showToast('Votre panier est vide', 'error');
             return;
         }
-
-        // Calculer le total
         const total = wishlist.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         
-        // Mettre à jour les totaux dans le modal
         document.getElementById('modalSubtotal').textContent = total.toFixed(2);
         document.getElementById('modalTotal').textContent = total.toFixed(2);
         
-        // Ouvrir le modal
         document.getElementById('checkoutModal').classList.remove('hidden');
         document.getElementById('checkoutModal').classList.add('flex');
         document.body.style.overflow = 'hidden';
@@ -469,15 +443,12 @@
         document.getElementById('checkoutModal').classList.remove('flex');
         document.body.style.overflow = '';
     }
-
-    // Gérer la soumission du formulaire
     document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const submitBtn = document.getElementById('submitOrderBtn');
         const originalText = submitBtn.textContent;
         
-        // Désactiver le bouton et afficher un loader
         submitBtn.disabled = true;
         submitBtn.innerHTML = `
             <svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24">
@@ -490,14 +461,13 @@
         const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         const total = wishlist.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         
-        // Ajouter les données du panier
         formData.append('total', total);
         formData.append('produits', JSON.stringify(wishlist));
         
         try {
             const csrfToken = document.querySelector('input[name="_token"]')?.value || '';
             
-            const response = await fetch('/commandes', {
+            const response = await fetch('{{ route("commandes.store", ["locale" => app()->getLocale()]) }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -509,21 +479,10 @@
             const data = await response.json();
 
             if (data.success) {
-                // Vider le panier
                 localStorage.removeItem('wishlist');
-                
-                // Fermer le modal
                 closeCheckoutModal();
-                
-                // Afficher un message de succès
                 showToast('Commande confirmée !', 'success');
-                
-                // Proposer d'ouvrir WhatsApp
-                if (confirm('Commande confirmée ! Voulez-vous confirmer aussi via WhatsApp ?')) {
-                    window.open(data.whatsappLink, '_blank');
-                }
-                
-                // Recharger la page après 2 secondes
+                // Proposer d'ouvrir WhatsApp seulement si un lien est fourni
                 setTimeout(() => {
                     window.location.reload();
                 }, 2000);

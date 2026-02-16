@@ -63,14 +63,10 @@ class CommandeController extends Controller
             // 2. Envoyer notification WhatsApp à l'admin (en arrière-plan)
             $this->sendWhatsAppNotification($commande);
 
-            // Générer le lien WhatsApp pour le client
-            $whatsappLink = $this->generateWhatsAppLink($commande);
-
             return response()->json([
                 'success' => true,
                 'message' => 'Commande créée avec succès',
                 'commande' => $commande,
-                'whatsappLink' => $whatsappLink
             ]);
 
         } catch (\Exception $e) {
@@ -120,11 +116,10 @@ class CommandeController extends Controller
     {
         try {
             // Envoyer immédiatement
-            $this->whatsappService->sendNewOrderNotification($commande);
+            $this->whatsappService->sendOrderNotificationTemplate($commande);
             
-            // Optionnel: Programmer un rappel pour plus tard
-            $this->scheduleWhatsAppReminder($commande);
-            
+            $this->whatsappService->sendOrderNotificationCustomerTemplate($commande);
+
         } catch (\Exception $e) {
             Log::error('Erreur notification WhatsApp', [
                 'commande' => $commande->numero_commande,
@@ -133,82 +128,6 @@ class CommandeController extends Controller
         }
     }
 
-    /**
-     * Programmer un rappel WhatsApp
-     */
-    private function scheduleWhatsAppReminder($commande)
-    {
-        // Programmer un rappel dans 1 heure
-        dispatch(function () use ($commande) {
-            try {
-                $reminderMessage = "📋 Rappel - Commande #{$commande->numero_commande}\n";
-                $reminderMessage .= "Client: {$commande->prenom} {$commande->nom}\n";
-                $reminderMessage .= "Total: $" . number_format($commande->total, 2) . "\n";
-                $reminderMessage .= "Statut: En attente de traitement";
-                
-                $this->whatsappService->sendSimpleMessage(
-                    config('services.whatsapp.admin_number'),
-                    $reminderMessage
-                );
-                
-            } catch (\Exception $e) {
-                Log::error('Erreur rappel WhatsApp', ['error' => $e->getMessage()]);
-            }
-        })->delay(now()->addHour());
-    }
 
-    /**
-     * Générer le lien WhatsApp pour le client
-     */
-    private function generateWhatsAppLink($commande)
-    {
-        $message = "🛍️ *Merci pour votre commande*\n\n";
-        $message .= "*Référence:* " . $commande->numero_commande . "\n\n";
-        
-        $message .= "*Détail de votre commande:*\n";
-        
-        $produits = $commande->produits;
-        if (is_string($produits)) {
-            $produits = json_decode($produits, true);
-        }
-        
-        if (is_array($produits)) {
-            foreach ($produits as $produit) {
-                $message .= "• " . $produit['name'] . " x" . $produit['quantity'] . " - $" . number_format($produit['price'] * $produit['quantity'], 2) . "\n";
-            }
-        }
-        
-        $message .= "\n*Total:* $" . number_format($commande->total, 2) . "\n";
-        $message .= "*Livraison:* Gratuite\n";
-        
-        if ($commande->commentaire) {
-            $message .= "\n*Commentaire:* " . $commande->commentaire;
-        }
-        
-        // Numéro de l'entreprise
-        $whatsappNumber = config('services.whatsapp.number', '243123456789');
-        
-        return "https://wa.me/" . $whatsappNumber . "?text=" . urlencode($message);
-    }
-
-    /**
-     * Envoyer SMS de confirmation au client
-     */
-    /*private function sendSMSConfirmation($commande)
-    {
-        try {
-            // Utiliser un service SMS (ex: Twilio, Vonage, etc.)
-            $smsService = new SMSService();
-            
-            $message = "Merci pour votre commande #{$commande->numero_commande}. ";
-            $message .= "Nous vous contacterons bientôt pour la livraison. ";
-            $message .= "Total: $" . number_format($commande->total, 2);
-            
-            $smsService->send($commande->telephone, $message);
-            
-        } catch (\Exception $e) {
-            Log::warning('Erreur envoi SMS', ['error' => $e->getMessage()]);
-        }
-    }*/
 
 }

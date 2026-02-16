@@ -1,0 +1,75 @@
+
+curl -i -X POST \
+ https://graph.facebook.com/v22.0/944820892051678/messages \
+ -H 'Authorization: Bearer EAAZBznZA8hDnABQmbe20RNYDBolcdF60I1fwMl5nhu7GDRV8qbHjubcr6idd0KXtkKWiwDhZBVO83c6XF0Phj0n6m7J7iDKnqwSK370ubVgEPIl0O3jh8ZB6LKO4ZChG1xPim4Sr3TZAhuM8LP8P19BnZAD15YmAl2oLuYvWCTDsCAb1pdbwUphU5Nwh85puLKZCtgjEDXMhePZAcFjh1SZASaw9XdJpQ11evhZB6QBpbc4orSVT4Oe0QOjKjrH3nTo7ZAhBWU5jFDF7UjSZAmggUrP9PPvHBseFKYBm3nAZDZD' \
+ -H 'Content-Type: application/json' \
+ -d '{ "messaging_product": "whatsapp", "to": "243977196639", "type": "template", "template": { "name": "jaspers_market_order_confirmation_v1", "language": { "code": "en_US" }, "components": [{ "type": "body", "parameters": [{ "type": "text", "text": "Ir Benash" }, { "type": "text", "text": "123456" }, { "type": "text", "text": "Feb 10, 2026" }] }] } }'
+
+
+
+
+ curl -i -X POST \
+  https://graph.facebook.com/v22.0/944820892051678/messages \
+  -H 'Authorization: Bearer EAAZBznZA8hDnABQmbe20RNYDBolcdF60I1fwMl5nhu7GDRV8qbHjubcr6idd0KXtkKWiwDhZBVO83c6XF0Phj0n6m7J7iDKnqwSK370ubVgEPIl0O3jh8ZB6LKO4ZChG1xPim4Sr3TZAhuM8LP8P19BnZAD15YmAl2oLuYvWCTDsCAb1pdbwUphU5Nwh85puLKZCtgjEDXMhePZAcFjh1SZASaw9XdJpQ11evhZB6QBpbc4orSVT4Oe0QOjKjrH3nTo7ZAhBWU5jFDF7UjSZAmggUrP9PPvHBseFKYBm3nAZDZD' \
+  -H 'Content-Type: application/json' \
+  -d '{ "messaging_product": "whatsapp", "to": "243826480812", "type": "template", "template": { "name": "jaspers_market_image_cta_v1", "language": { "code": "en_US" }, "components": [{ "type": "header", "parameters": [{ "type": "image", "image": { "link": "https://instagram.ffih1-2.fna.fbcdn.net/v/t51.2885-19/549218256_18030126290707731_2010157115397855357" } }] }] } }'
+
+
+
+
+
+https://graph.facebook.com/v22.0/975966998935081/243826480812?access_token=EAAZBznZA8hDnABQotTBw1NCLnVq2E3JZBZCAih7U80iL9H8hkGZAlMCX1ybF3CZAHZALGPUaqakBH0sZCCVuujx9LRjS0BvErRFqaFm0nryN8uti5cR0sMfNhomKe84JkpalrbwC67wD0GFXIAnRsEQXyb2ww7KMD8rfsuS2gho19Ul7URkoWKlko7elBzDy8O6aB1RoWb1BvuYInxcbWVjrfhxcTtYiA1RmWxHYWZC6pYzpHztlVIwZDZD 
+
+
+
+
+curl -X POST \
+'https://graph.facebook.com/v23.0/975966998935081/register' \
+-H 'Authorization: Bearer EAAZBznZA8hDnABQotTBw1NCLnVq2E3JZBZCAih7U80iL9H8hkGZAlMCX1ybF3CZAHZALGPUaqakBH0sZCCVuujx9LRjS0BvErRFqaFm0nryN8uti5cR0sMfNhomKe84JkpalrbwC67wD0GFXIAnRsEQXyb2ww7KMD8rfsuS2gho19Ul7URkoWKlko7elBzDy8O6aB1RoWb1BvuYInxcbWVjrfhxcTtYiA1RmWxHYWZC6pYzpHztlVIwZDZD' \
+-H 'Content-Type: application/json' \
+-d '{
+  "messaging_product": "whatsapp",
+  "pin": "899022"
+}'
+
+
+
+curl -X GET 'https://graph.facebook.com/debug_token?input_token=EAAZBznZA8hDnABQotTBw1NCLnVq2E3JZBZCAih7U80iL9H8hkGZAlMCX1ybF3CZAHZALGPUaqakBH0sZCCVuujx9LRjS0BvErRFqaFm0nryN8uti5cR0sMfNhomKe84JkpalrbwC67wD0GFXIAnRsEQXyb2ww7KMD8rfsuS2gho19Ul7URkoWKlko7elBzDy8O6aB1RoWb1BvuYInxcbWVjrfhxcTtYiA1RmWxHYWZC6pYzpHztlVIwZDZD&access_token=EAAZBznZA8hDnABQotTBw1NCLnVq2E3JZBZCAih7U80iL9H8hkGZAlMCX1ybF3CZAHZALGPUaqakBH0sZCCVuujx9LRjS0BvErRFqaFm0nryN8uti5cR0sMfNhomKe84JkpalrbwC67wD0GFXIAnRsEQXyb2ww7KMD8rfsuS2gho19Ul7URkoWKlko7elBzDy8O6aB1RoWb1BvuYInxcbWVjrfhxcTtYiA1RmWxHYWZC6pYzpHztlVIwZDZD'
+
+curl -X GET \
+'https://graph.facebook.com/v21.0/1468574074866414' \
+-H 'Authorization: Bearer EAAZBznZA8hDnABQotTBw1NCLnVq2E3JZBZCAih7U80iL9H8hkGZAlMCX1ybF3CZAHZALGPUaqakBH0sZCCVuujx9LRjS0BvErRFqaFm0nryN8uti5cR0sMfNhomKe84JkpalrbwC67wD0GFXIAnRsEQXyb2ww7KMD8rfsuS2gho19Ul7URkoWKlko7elBzDy8O6aB1RoWb1BvuYInxcbWVjrfhxcTtYiA1RmWxHYWZC6pYzpHztlVIwZDZD'
+
+
+
+curl -X GET \
+'https://graph.facebook.com/v21.0/1468574074866414/phone_numbers' \
+-H 'Authorization: Bearer EAAZBznZA8hDnABQotTBw1NCLnVq2E3JZBZCAih7U80iL9H8hkGZAlMCX1ybF3CZAHZALGPUaqakBH0sZCCVuujx9LRjS0BvErRFqaFm0nryN8uti5cR0sMfNhomKe84JkpalrbwC67wD0GFXIAnRsEQXyb2ww7KMD8rfsuS2gho19Ul7URkoWKlko7elBzDy8O6aB1RoWb1BvuYInxcbWVjrfhxcTtYiA1RmWxHYWZC6pYzpHztlVIwZDZD'
+
+
+curl -X GET \
+'https://graph.facebook.com/v21.0/975966998935081/phone_numbers' \
+-H 'Authorization: Bearer EAAZBznZA8hDnABQkuISJVseSXihunVkf1WT4emRrmrW9VGDM1FA0xOM7wQQyrV970TC1jGvSLYsOdi6c7tvk7jZAKe5tQtfVvWM7UUELyBNpkQsltgJdpUUZCnR01ZAotYCtRrfs65SB1so6PX991Q5RZAwfKeqL9t3wNSYdN6KWOvQZCCZCtZBw9lHZAZAxEz9UwNjmNZBD5rY4ZAsa0pG4krabAWjBdSBqumLMNNBDyL9kPCQ8hd25czfRmrUNGUfsPWJdrehtGsalXui4MMzNBOlcmPkPa8wZDZD'
+
+
+
+
+{"data":[{"verified_name":"Test Number","code_verification_status":"NOT_VERIFIED","display_phone_number":"15551560890","quality_rating":"GREEN","platform_type":"CLOUD_API","throughput":{"level":"STANDARD"},"id":"944820892051678"}],"paging":{"cursors":{"before":"QVFIU1pqVFd1WUJKR2xSNG54T011OUFPNkNmMW5PUmpPRU16SHNnYzlBa0Y3amZArV2JfR19PWmtYbWVYbkQtQ0hpSkIZD","after":"QVFIU1pqVFd1WUJKR2xSNG54T011OUFPNkNmMW5PUmpPRU16SHNnYzlBa0Y3amZArV2JfR19PWmtYbWVYbkQtQ0hpSkIZD"}}}% 
+
+
+
+curl -X POST 'https://graph.facebook.com/v21.0/975966998935081/messages' \
+  --header 'Authorization: Bearer EAAZBznZA8hDnABQqEJgLSjIvntO5EeLv2caJtrDXjdtqcGZA36B6dv0vIUttQpozMkmLWljYxO7TN50tvdZCCC4goHDDbzO1WqGksAjJosfZBOrVVfhdSZCnxAcWofAY5MtEmdMvSZByDkdR7Uh8DQdBLGnSnuUZA7IZA1KtCAIi1rwrKqt06R3ggZCneG7RZCRDji0FqFHRrM6xIp3hIZAF' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "messaging_product": "whatsapp",
+    "to": "243977196639",
+    "type": "template",
+    "template": {
+      "name": "hello_world",
+      "language": { "code": "en_US" }
+    }
+  }'
+  
+
+  https://developers.facebook.com/apps/4419614211640944/whatsapp-business/wa-dev-console

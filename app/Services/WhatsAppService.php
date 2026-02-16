@@ -25,154 +25,105 @@ class WhatsAppService
     }
 
     /**
-     * Envoyer un message simple
-     */
-    public function sendSimpleMessage($to, $text)
-    {
-        try {
-            // Envoyer le message directement avec WhatsApp API
-            $response = $this->whatsapp->sendTextMessage(
-                $this->formatPhoneNumber($to),
-                $text
-            );
-            
-            Log::info('Message WhatsApp simple envoyé', [
-                'to' => $to,
-                'message_id' => $response['messages'][0]['id'] ?? 'N/A'
-            ]);
-            
-            return $response;
-            
-        } catch (\Exception $e) {
-            Log::error('Erreur envoi message simple WhatsApp', [
-                'error' => $e->getMessage(),
-                'to' => $to
-            ]);
-            return false;
-        }
-    }
-
-    /**
-     * Envoyer un message avec template
-     */
-    public function sendTemplateMessage($to, $templateName, $parameters = [])
-    {
-        try {
-            // Préparer les composants du template
-            $component_header = [];
-            $component_body = [];
-            $component_buttons = [];
-            
-            // Organiser les paramètres selon leur type
-            foreach ($parameters as $param) {
-                $type = $param['type'] ?? 'text';
-                
-                if ($type === 'header') {
-                    $component_header[] = $param;
-                } elseif ($type === 'button') {
-                    $component_buttons[] = $param;
-                } else {
-                    $component_body[] = $param;
-                }
-            }
-            
-            // Créer le composant
-            $components = new Component($component_header, $component_body, $component_buttons);
-            
-            // Créer et envoyer le template
-            $response = $this->whatsapp->sendTemplate(
-                $this->formatPhoneNumber($to),
-                $templateName,
-                'fr', // Langue
-                $components
-            );
-            
-            Log::info('Template WhatsApp envoyé', [
-                'to' => $to,
-                'template' => $templateName,
-                'response' => $response->httpStatusCode()
-            ]);
-            
-            return $response;
-            
-        } catch (\Exception $e) {
-            Log::error('Erreur envoi template WhatsApp', [
-                'error' => $e->getMessage(),
-                'template' => $templateName,
-                'to' => $to
-            ]);
-            return false;
-        }
-    }
-
-    /**
      * Envoyer un template de notification de commande
      */
-    public function sendOrderNotificationTemplate($commande)
+  public function sendOrderNotificationTemplate($commande)
+{
+    try {
+
+        $bodyParameters = [
+           ['type' => 'text', 'text' => $this->cleanParam($commande->prenom ?? ' ')],       // {{1}}
+            ['type' => 'text', 'text' => $this->cleanParam($commande->nom ?? ' ')],          // {{2}}
+            ['type' => 'text', 'text' => $this->cleanParam($commande->email ?? ' ')],        // {{3}}
+            ['type' => 'text', 'text' => $this->cleanParam($commande->telephone ?? ' ')],    // {{4}}
+            ['type' => 'text', 'text' => $this->cleanParam($commande->adresse ?? ' ')],      // {{5}}
+            ['type' => 'text', 'text' => $this->cleanParam($commande->ville ?? ' ')],        // {{6}}
+            ['type' => 'text', 'text' => $this->cleanParam($commande->code_postal ?? ' ')],  // {{7}}
+            ['type' => 'text', 'text' => $this->cleanParam($this->formatProduitsList($commande))], // {{8}} - CRITIQUE
+            ['type' => 'text', 'text' => (string)number_format($commande->total, 2) . ' $'], // {{9}}
+            ['type' => 'text', 'text' => $this->cleanParam($commande->commentaire ?? 'Aucun')], // {{10}}
+        ];
+
+        $components = new Component([], $bodyParameters, []);
+
+        $response = $this->whatsapp->sendTemplate(
+            $this->formatPhoneNumber($this->adminNumber),
+            'commande_client',
+            'fr', 
+            $components
+        );
+
+        Log::info("WhatsApp envoyé via template commande_client", ['status' => $response->httpStatusCode()]);
+        return $response;
+
+    } catch (\Exception $e) {
+        Log::error('Erreur WhatsApp #132018 : Paramètres invalides', [
+            'error' => $e->getMessage(),
+            'check_params_count' => count($bodyParameters),
+            'first_param' => $bodyParameters[0]['text'] ?? 'vide'
+        ]);
+        return false;
+    }
+}
+
+
+    public function sendOrderNotificationCustomerTemplate($commande)
     {
         try {
-            // Préparer les paramètres pour le template
-            $parameters = [
-                // Header
-                [
-                    'type' => 'header',
-                    'parameters' => [
-                        [
-                            'type' => 'text',
-                            'text' => $commande->numero_commande
-                        ]
-                    ]
-                ],
-                
-                // Body parameters
-                [
-                    'type' => 'body',
-                    'parameters' => [
-                        [
-                            'type' => 'text',
-                            'text' => $commande->prenom . ' ' . $commande->nom
-                        ],
-                        [
-                            'type' => 'text',
-                            'text' => '$' . number_format($commande->total, 2)
-                        ],
-                        [
-                            'type' => 'text',
-                            'text' => date('d/m/Y H:i')
-                        ]
-                    ]
-                ]
+            $bodyParameters = [
+                ['type' => 'text', 'text' => $commande->prenom],        
+                ['type' => 'text', 'text' => $commande->nom],        
             ];
-            
-            // Nom du template (doit être créé dans WhatsApp Business)
-            $templateName = 'order_notification';
-            
-            return $this->sendTemplateMessage($this->adminNumber, $templateName, $parameters);
-            
+
+            $components = new Component([], $bodyParameters, []);
+
+            $response = $this->whatsapp->sendTemplate(
+                $this->formatPhoneNumber($commande->telephone),
+                'confirmation_commande',  
+                'fr',  
+                $components
+            );
+
+            Log::info('Notification WhatsApp confirmation_commande envoyée', ['id' => $commande->id]);
+            return $response;
+
         } catch (\Exception $e) {
-            Log::error('Erreur template notification commande', ['error' => $e->getMessage()]);
+            Log::error('Erreur template confirmation_commande: ' . $e->getMessage());
             return false;
         }
     }
 
-    /**
-     * Envoyer une notification de nouvelle commande (version texte simple)
-     */
-    public function sendNewOrderNotification($commande)
-    {
-        try {
-            // Formater le message
-            $message = $this->formatOrderMessage($commande);
-            
-            // Envoyer le message texte
-            return $this->sendSimpleMessage($this->adminNumber, $message);
-            
-        } catch (\Exception $e) {
-            Log::error('Erreur notification commande WhatsApp', ['error' => $e->getMessage()]);
-            return false;
-        }
+
+
+    private function cleanParam($text)
+{
+    // Remplace les retours à la ligne et tabulations par des espaces
+    $text = str_replace(["\r", "\n", "\t"], ' ', (string)$text);
+    // Remplace les espaces multiples (plus de 4) par un seul espace (exigé par l'erreur 132018)
+    $text = preg_replace('/\s+/', ' ', $text);
+    
+    return trim($text);
+}
+
+
+    private function formatProduitsList($commande)
+{
+    $produits = $commande->produits;
+    if (is_string($produits)) {
+        $produits = json_decode($produits, true);
     }
 
+    $items = [];
+    if (is_array($produits)) {
+        foreach ($produits as $p) {
+            $items[] = "{$p['name']} (x{$p['quantity']})";
+        }
+        // On joint avec des virgules au lieu de retours à la ligne \n
+        return implode(', ', $items); 
+    }
+    
+    return "Aucun produit";
+}
     /**
      * Formater le message de commande
      */
@@ -222,101 +173,21 @@ class WhatsAppService
      */
     private function formatPhoneNumber($phone)
     {
-        // Nettoyer le numéro
         $phone = preg_replace('/[^0-9]/', '', $phone);
         
-        // Ajouter l'indicatif si absent
-        if (strlen($phone) == 9) {
-            $phone = '243' . $phone;
-        } elseif (strlen($phone) == 10 && substr($phone, 0, 1) == '0') {
+        if (str_starts_with($phone, '0')) {
             $phone = '243' . substr($phone, 1);
         }
         
+        if (strlen($phone) == 9) {
+            $phone = '243' . $phone;
+        }
+
         return $phone;
     }
 
-    /**
-     * Tester la connexion
-     */
-    public function testConnection()
-    {
-        try {
-            $testMessage = "✅ Test WhatsApp API\n\n";
-            $testMessage .= "Application: " . config('app.name') . "\n";
-            $testMessage .= "Date: " . now()->format('d/m/Y H:i:s') . "\n";
-            $testMessage .= "Statut: Connecté avec succès";
-            
-            return $this->sendSimpleMessage($this->adminNumber, $testMessage);
-            
-        } catch (\Exception $e) {
-            Log::error('Test connexion WhatsApp échoué', ['error' => $e->getMessage()]);
-            return false;
-        }
-    }
 
-    /**
-     * Exemple d'utilisation de template avec des boutons
-     */
-    public function sendWelcomeMessage($to, $customerName)
-    {
-        try {
-            $parameters = [
-                // Header
-                [
-                    'type' => 'header',
-                    'parameters' => [
-                        [
-                            'type' => 'text',
-                            'text' => 'Bienvenue!'
-                        ]
-                    ]
-                ],
-                
-                // Body
-                [
-                    'type' => 'body',
-                    'parameters' => [
-                        [
-                            'type' => 'text',
-                            'text' => $customerName
-                        ],
-                        [
-                            'type' => 'text',
-                            'text' => config('app.name')
-                        ]
-                    ]
-                ],
-                
-                // Boutons
-                [
-                    'type' => 'button',
-                    'sub_type' => 'quick_reply',
-                    'index' => 0,
-                    'parameters' => [
-                        [
-                            'type' => 'text',
-                            'text' => 'Voir nos produits'
-                        ]
-                    ]
-                ],
-                [
-                    'type' => 'button',
-                    'sub_type' => 'quick_reply',
-                    'index' => 1,
-                    'parameters' => [
-                        [
-                            'type' => 'text',
-                            'text' => 'Contact support'
-                        ]
-                    ]
-                ]
-            ];
-            
-            return $this->sendTemplateMessage($to, 'welcome_message', $parameters);
-            
-        } catch (\Exception $e) {
-            Log::error('Erreur message de bienvenue', ['error' => $e->getMessage()]);
-            return false;
-        }
-    }
+
+
+
 }
